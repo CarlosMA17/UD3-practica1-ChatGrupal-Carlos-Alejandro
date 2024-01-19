@@ -36,8 +36,7 @@ public class Client {
 
         objOutStream.writeUTF(username);
 
-        ArrayList<Message> historyMessages = (ArrayList<Message>) objInStream.readObject();
-        ServerListener serverListener = new ServerListener(objInStream, username, historyMessages);
+        ServerListener serverListener = new ServerListener(objInStream, username);
         serverListener.start();
 
         while (!userInput.equals("bye")) {

@@ -32,7 +32,6 @@ public class Server {
             ObjectOutputStream clientObjOutStream = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientObjInStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            clientObjOutStream.writeObject(historyMessage);
             connectedObjOutputStreamList.add(clientObjOutStream);
 
             new ClientHandler(clientObjInStream, clientObjOutStream, connectedObjOutputStreamList, historyMessage).start();
