@@ -14,12 +14,14 @@ public class ClientHandler extends Thread  {
     private ObjectInputStream clientObjInStream;
     private ObjectOutputStream clientObjOutStream;
     private ArrayList<ObjectOutputStream> connectedObjOutputStreamList;
+    private ArrayList<Message> historyMessage;
 
     public ClientHandler(ObjectInputStream clientObjInStream, ObjectOutputStream clientObjOutStream,
-                         ArrayList<ObjectOutputStream> connectedObjOutputStreamList) {
+                         ArrayList<ObjectOutputStream> connectedObjOutputStreamList, ArrayList<Message> historyMessage) {
         this.clientObjInStream = clientObjInStream;
         this.clientObjOutStream = clientObjOutStream;
         this.connectedObjOutputStreamList = connectedObjOutputStreamList;
+        this.historyMessage = historyMessage;
     }
 
     @Override
@@ -32,6 +34,8 @@ public class ClientHandler extends Thread  {
 
             this.clientObjOutStream.writeUTF(welcomeMessage);
             System.out.println(username + " se ha unido, " + welcomeMessage);
+            this.clientObjOutStream.writeObject(Server.getHistoryMessage());
+
 
             while (true) {
                 Message messageReceived = (Message) this.clientObjInStream.readObject();

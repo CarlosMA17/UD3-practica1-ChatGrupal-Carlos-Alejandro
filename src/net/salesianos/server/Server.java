@@ -11,6 +11,15 @@ import java.util.ArrayList;
 
 public class Server {
     private static final ArrayList<ObjectOutputStream> connectedObjOutputStreamList = new ArrayList<>();
+    private static ArrayList<Message> historyMessage =  new ArrayList<>();
+
+    public static void setHistoryMessage(ArrayList<Message> historyMessage) {
+        Server.historyMessage = historyMessage;
+    }
+
+    public static ArrayList<Message> getHistoryMessage() {
+        return historyMessage;
+    }
 
     public static void main(String[] args) throws Exception {
         ServerSocket serverSocket = new ServerSocket(50000, 10);
@@ -23,9 +32,10 @@ public class Server {
             ObjectOutputStream clientObjOutStream = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientObjInStream = new ObjectInputStream(clientSocket.getInputStream());
 
+
             connectedObjOutputStreamList.add(clientObjOutStream);
 
-            new ClientHandler(clientObjInStream, clientObjOutStream, connectedObjOutputStreamList).start();
+            new ClientHandler(clientObjInStream, clientObjOutStream, connectedObjOutputStreamList, historyMessage).start();
         }
     }
 }

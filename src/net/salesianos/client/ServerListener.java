@@ -1,6 +1,7 @@
 package net.salesianos.client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 import net.salesianos.models.Message;
 
@@ -20,6 +21,11 @@ public class ServerListener extends Thread {
 
         try {
             System.out.println(objInStream.readUTF());
+            if (objInStream.readObject() instanceof Message) {
+                for (Message message : (ArrayList<Message>) objInStream.readObject()) {
+                    System.out.println(message);
+                }
+            }
 
             while (true) {
                 newMessage = (Message) this.objInStream.readObject();
@@ -29,13 +35,10 @@ public class ServerListener extends Thread {
                 } else {
                     System.out.println("New message received from " + newMessage.getSender() + ": " + newMessage.getContent());
                 }
-
-                synchronized (Client.lock) {
-                    Client.lock.notify();
-                }
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("cerrando conexion con el servidor...");
+            e.printStackTrace();
         }
     }
 

@@ -39,19 +39,17 @@ public class Client {
 
         while (!userInput.equals("bye")) {
 
-            synchronized (lock) {
-                System.out.print("Escribe un mensaje o 'bye' para salir: ");
-                userInput = SCANNER.nextLine();
+            System.out.print("Escribe un mensaje o 'bye' para salir: \n");
+            userInput = SCANNER.nextLine();
 
-                if (msgFilter(userInput).equals("msg:")) {
+            if (msgFilter(userInput).equals("msg:")) {
 
-                    Message message = new Message(username, userInput);
-                    objOutStream.writeObject(message);
-                    lock.wait();
+                Message message = new Message(username, userInput);
+                objOutStream.writeObject(message);
 
-                } else if(!msgFilter(userInput).equals("bye")) {
-                    System.out.println("El prefijo del mensaje es incorrecto, asegúrese de escribir 'msg:' al comienzo del mensaje o 0 para salir");
-                }
+
+            } else if(!msgFilter(userInput).equals("bye")) {
+                System.out.println("El prefijo del mensaje es incorrecto, asegúrese de escribir 'msg:' al comienzo del mensaje o 0 para salir");
             }
         }
         SCANNER.close();
