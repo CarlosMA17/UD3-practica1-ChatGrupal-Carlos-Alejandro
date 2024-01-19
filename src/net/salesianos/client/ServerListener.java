@@ -7,9 +7,11 @@ import net.salesianos.models.Message;
 public class ServerListener extends Thread {
 
     private ObjectInputStream objInStream;
+    private String username;
 
-    public ServerListener(ObjectInputStream socketObjectInputStream) {
+    public ServerListener(ObjectInputStream socketObjectInputStream, String username) {
         this.objInStream = socketObjectInputStream;
+        this.username = username;
     }
 
     @Override
@@ -21,14 +23,19 @@ public class ServerListener extends Thread {
 
             while (true) {
                 newMessage = (Message) this.objInStream.readObject();
-                System.out.println("\nNew message received: " + newMessage.getContent());
+
+                if(newMessage.getSender().equals(username)) {
+                    System.out.println("el mensaje que enviaste (" + newMessage.getContent() + ") se envio correctamente");
+                } else {
+                    System.out.println("New message received from " + newMessage.getSender() + ": " + newMessage.getContent());
+                }
 
                 synchronized (Client.lock) {
                     Client.lock.notify();
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Server stopped receiving messages.");
+            System.out.println("cerrando conexion con el servidor...");
         }
     }
 
